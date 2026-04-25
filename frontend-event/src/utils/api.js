@@ -1,11 +1,8 @@
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://localhost:8000").replace(/\/$/, "");
-
-export const defaultHeaders = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-};
+const API_BASE_URL =
+  (import.meta.env.VITE_API_BASE_URL ||
+    "https://backend-railway-kamu.up.railway.app")
 
 export function buildApiUrl(path) {
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${API_BASE_URL}${normalizedPath}`;
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`
+  return `${API_BASE_URL}/api${normalizedPath}`
 }
