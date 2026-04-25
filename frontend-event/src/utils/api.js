@@ -4,10 +4,12 @@ const API_BASE_URL =
 
 export function buildApiUrl(path) {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${API_BASE_URL}/api${normalizedPath}`;
+ return `${API_BASE_URL}${normalizedPath}`;
 }
 
 export const defaultHeaders = {
   "Content-Type": "application/json",
 };
 // force update
+
+console.log("API BASE:", API_BASE_URL);
