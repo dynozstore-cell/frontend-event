@@ -19,13 +19,16 @@ export default function AdminLayout() {
 
   const [pendingMessageCount, setPendingMessageCount] = useState(0);
 
+  // 1. Cek keamanan (Auth) hanya saat pertama kali masuk atau ganti halaman
   useEffect(() => {
     const authUser = getUser();
     if (!authUser || String(authUser.role).toLowerCase() !== "admin") {
       navigate("/login", { state: { from: location }, replace: true });
-      return;
     }
+  }, [location, navigate]);
 
+  // 2. Ambil jumlah pesan (hanya saat pertama kali masuk + interval 30 detik agar hemat)
+  useEffect(() => {
     const fetchPendingCount = async () => {
       try {
         const token = getToken();
@@ -35,7 +38,6 @@ export default function AdminLayout() {
         });
         if (res.ok) {
           const data = await res.json();
-          // Status 'pending' are those that haven't been replied/read
           const pending = Array.isArray(data) ? data.filter(m => m.status === 'pending') : [];
           setPendingMessageCount(pending.length);
         }
@@ -45,9 +47,9 @@ export default function AdminLayout() {
     };
 
     fetchPendingCount();
-    const interval = setInterval(fetchPendingCount, 10000); // 10 seconds
+    const interval = setInterval(fetchPendingCount, 30000); // Ganti ke 30 detik agar server tidak capek
     return () => clearInterval(interval);
-  }, [navigate, location]);
+  }, []); // Dependency kosong agar HANYA JALAN SEKALI saat masuk dashboard
 
   const navItems = [
     { path: '/admin/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
